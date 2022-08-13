@@ -1,14 +1,16 @@
-// INTRODUCED snakeDir, need to go back to foundation and confirm automatic moving snake head
-// move snake with length > 1 by unshifting based on snakeDir, and pop tail of snake (state.snakePos.at(-1))
-// three functions? moveSnake (auto movement controlled by interval), controlSnake (key event, response to key event + consider current movement)
+// sometimes snake disappears, need to solve - classList of undefined being accessed?
+// need to fix bug above
+// need to stop snake from overlapping itself
+// need to make sure foodPos cannot appear on snake
+// add an obstacle (black cell, i.e. wall) in grid each time snake consumes food
 
 const state = {
     numCells: (600/40) * (600/40), // total number of grid cells: (#grid height / --cell-size) * (#grid width / --cell-size)
     cells: [],
 
-    snakePos: [110], // initial position of snake head, snakePos[0]
-    snakeDir: 'left',  // current moving direction of snake
-    foodPos: 107, // initial position of food
+    snakePos: [],   // current positions of cells occupied by snake
+    snakeDir: '',  // current moving direction of snake
+    foodPos: 0, // initial position of food
 
     score: 0,
     gameOver: false
@@ -19,7 +21,17 @@ const initGame = (element) => {
 
     drawHeader();
     drawGrid();
-    drawScoreboard();
+
+    score = initScore();
+    drawScore(score);
+
+    const directions = ['left', 'right', 'up', 'down'];
+
+    state.snakePos.push(getRandomPos()); // initial position of snake head, snakePos[0]
+    state.foodPos = getRandomPos();
+    state.snakeDir = directions[Math.floor(Math.random() * directions.length)];
+    console.log(state.snakeDir);
+
     drawSnake();
     drawFood(state.foodPos);
 
@@ -34,7 +46,6 @@ const drawHeader = () => {
     header.append(h1);
 
     state.app.appendChild(header);
-
 }
 
 const drawGrid = () => {
@@ -51,24 +62,22 @@ const drawGrid = () => {
     state.app.appendChild(grid);
 }
 
-const drawScoreboard = () => {
+var initScore = () => {
     const score = document.createElement('div');
-    score.setAttribute('id', 'score')
+    score.setAttribute('id', 'score');
+    return state.app.appendChild(score);
+}
 
+const drawScore = (score) => {
     const h1 = document.createElement('h1');
     h1.innerText = `Score: ${state.score}`;
     score.append(h1);
-
-    state.app.appendChild(score);
-
 }
 
 const drawSnake = () => {
     for (let i = 0; i < state.snakePos.length; i++) {
         state.cells[state.snakePos[i]].classList.add('snake');
     }
-
-    // probably more to add here as the snake gets longer, turns, etc.
 }
 
 const eraseSnake = () => {
@@ -85,30 +94,34 @@ const drawFood = (position) => {
 const moveSnake = (direction) => {
     switch (direction) {
         case 'left':
-            if (state.snakePos[0] % Math.sqrt(state.numCells) === 0) {  // snake head hits wall in direction
-                state.gameOver = true;
-                return;
+            if (state.snakePos[0] % Math.sqrt(state.numCells) === 0  // snake head hits wall in direction
+                || state.snakePos.includes(state.snakePos[0] - 1)) {  // snake collides with itself in direction
+                    state.gameOver = true;
+                    return;
             } else state.snakePos.unshift(state.snakePos[0] - 1);
             break;
 
         case 'right':
-            if (state.snakePos[0] % Math.sqrt(state.numCells) === Math.sqrt(state.numCells) - 1) {  // "
-                state.gameOver = true;
-                return;
+            if (state.snakePos[0] % Math.sqrt(state.numCells) === Math.sqrt(state.numCells) - 1 // "
+                || state.snakePos.includes(state.snakePos[0] + 1)) {  // "
+                    state.gameOver = true;
+                    return;
             } else state.snakePos.unshift(state.snakePos[0] + 1);
             break;
 
         case 'up':
-            if (state.snakePos[0] <=  Math.sqrt(state.numCells) - 1) {  // "
-                state.gameOver = true;
-                return;
+            if (state.snakePos[0] <= Math.sqrt(state.numCells) - 1 // "
+                || state.snakePos.includes(state.snakePos[0] - Math.sqrt(state.numCells))) {  // "
+                    state.gameOver = true;
+                    return;
             } else state.snakePos.unshift(state.snakePos[0] - Math.sqrt(state.numCells));
             break;
 
         case 'down':
-            if (state.snakePos[0] >= state.numCells - Math.sqrt(state.numCells)) {  // "
-                state.gameOver = true;
-                return;
+            if (state.snakePos[0] >= state.numCells - Math.sqrt(state.numCells) // "
+                || state.snakePos.includes(state.snakePos[0] + Math.sqrt(state.numCells))) {  // "
+                    state.gameOver = true;
+                    return;
             } else state.snakePos.unshift(state.snakePos[0] + Math.sqrt(state.numCells));
             break;
     }
@@ -123,8 +136,7 @@ const moveSnake = (direction) => {
 const checkForFood = () => {
     if (state.snakePos[0] === state.foodPos) {
         state.cells[state.foodPos].classList.remove('food');
-        state.score++;
-        // TO-DO: need to update scoreboard!!!
+        updateScore();
 
         switch (state.snakeDir) {
             case 'left':
@@ -141,9 +153,22 @@ const checkForFood = () => {
                 break;
         }
 
-        pos = Math.floor(Math.random() * state.numCells) - 1;
+        let pos;
+        do {pos = getRandomPos();} while (state.snakePos.includes(pos));  // food won't appear on cells currently occupied by snake
         drawFood(pos);
     }
+}
+
+var getRandomPos = () => {  // return random position (cell) in grid
+    return Math.floor(Math.random() * state.numCells) - 1;
+}
+
+const updateScore = () => {
+    score = document.querySelector('#score');
+    score.innerHTML = ``;
+    state.score++;
+    drawScore(score);
+    // ...
 }
 
 const controlSnake = (event) => {
@@ -151,21 +176,33 @@ const controlSnake = (event) => {
 
     switch (event.code) {
         case 'ArrowLeft':
-            moveSnake('left');
-            state.snakeDir = 'left';
-            break;
+            if (state.snakeDir === 'right') return;  // do nothing if snake is moving in the exact opposite direction; player must turn
+            else {
+                moveSnake('left');
+                state.snakeDir = 'left';
+                break;
+            }
         case 'ArrowRight':
-            moveSnake('right');
-            state.snakeDir = 'right';
-            break;
+            if (state.snakeDir === 'left') return;  // "
+            else {
+                moveSnake('right');
+                state.snakeDir = 'right';
+                break;
+            }
         case 'ArrowUp':
-            moveSnake('up');
-            state.snakeDir = 'up';
-            break;
+            if (state.snakeDir === 'down') return;  // "
+            else {
+                moveSnake('up');
+                state.snakeDir = 'up';
+                break;
+            }
         case 'ArrowDown':
-            moveSnake('down');
-            state.snakeDir = 'down';
-            break;
+            if (state.snakeDir === 'up') return;  // "
+            else {
+                moveSnake('down');
+                state.snakeDir = 'down';
+                break;
+            }
     }
 }
 
