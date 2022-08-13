@@ -1,0 +1,81 @@
+:root {
+    --cell-size: 40px; /* includes borders */
+    --cell-border: 1px;  /* 1px per side */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    /* box-sizing: border-box; */
+    font-family: 'Silkscreen', sans-serif;
+}
+
+body {
+    background-color: antiquewhite;
+}
+
+.div {
+    display: block;
+}
+
+#app {
+    display: grid;
+}
+
+#header {
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 50px;
+}
+
+#grid {
+    width: 600px;
+    height: 600px;
+
+    display: grid;
+    margin: 0 auto;
+
+    grid-template-columns: repeat(auto-fit, var(--cell-size));
+    grid-template-rows: repeat(auto-fit, var(--cell-size));
+
+    border: black solid 5px;
+}
+
+#score {
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 30px;
+}
+
+.message {
+    /* position: absolute;
+    top: 200px;
+    left: 200px;
+    width: 200px;
+    height: 30%; */
+    opacity: 85%;   
+}
+
+.message h1 {
+    color: black;
+    text-align: center;
+    line-height: 50px;
+}
+
+.cell {
+    border: black dashed var(--cell-border);
+    width: var(--cell-size) - 2 * var(--cell-border); /* -2 * border width for border on each side*/
+    height: var(--cell-size) - 2 * var(--cell-border);
+    background-size: contain;
+    opacity: 65%;
+}
+
+.snake {
+    background-color: darkgreen;
+}
+
+.food {
+    background-color: darkred;
+}
