@@ -79,3 +79,26 @@ body {
 .food {
     background-color: darkred;
 }
+
+.block {
+    background-color: black;
+}
+
+.button {
+    position: absolute;
+    top: 40%;
+    left: 44.5%;
+    width: 11%;
+    height: 5%;
+    background-color: cadetblue;
+    opacity: 100%;
+}
+
+.button:hover {
+    background-color: white;
+}
+
+.button h1 {
+    color: black;
+    text-align: center;
+}
