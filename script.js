@@ -117,9 +117,7 @@ const drawSnake = () => {
 }
 
 const eraseSnake = () => {
-    console.log(state.snakePos.length);
     for (let i = 0; i < state.snakePos.length; i++) {
-        console.log(i);
         state.cells[state.snakePos[i]].classList.remove('snake');
     }
 }
