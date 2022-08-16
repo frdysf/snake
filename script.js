@@ -1,5 +1,5 @@
 // PENDING BUG: sometimes snake disappears, need to solve - classList of undefined being accessed?
-// often traced to eraseSnake, drawBlock, etc.
+// often traced to eraseSnake, drawBlock, drawFood, etc.
 
 const state = {
     numCells: (600/40) * (600/40), // total number of grid cells: (#grid height / --cell-size) * (#grid width / --cell-size)
