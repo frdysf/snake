@@ -213,7 +213,7 @@ const checkForFood = () => {
 }
 
 var getRandomPos = () => {  // return random position in grid
-    return Math.floor(Math.random() * state.numCells) - 1;
+    return Math.floor(Math.random() * (state.numCells - 1));
 }
 
 const controlSnake = (event) => {  // event handler for key press
