@@ -20,5 +20,5 @@ Classic Snake. Open `snake.html` and use the arrow keys :arrow_left: :arrow_up: 
 
 :warning: **Bug alert!** During some play instances, the snake randomly disappears from the grid. This has something to do with a sudden failure to access the `classList` of a cell (or multiple cells) in functions like `eraseSnake`, `drawBlock`, `drawFood`, etc. during runtime. Most instances work fine though—just refresh and restart if something funny happens.
 
-- [ ] Fix bug as mentioned: #000 [Open an issue to link here.]
+- [ ] Fix disappearing snake bug as mentioned: #1
 - [ ] Make CSS layout responsive (resizeable) to accomodate different screen sizes
