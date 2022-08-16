@@ -65,7 +65,7 @@ body {
 }
 
 .cell {
-    border: black dashed var(--cell-border);
+    border: var(--cell-border) dashed rgba(0, 0, 0, 0.2);
     width: var(--cell-size) - 2 * var(--cell-border); /* -2 * border width for border on each side*/
     height: var(--cell-size) - 2 * var(--cell-border);
     background-size: contain;
