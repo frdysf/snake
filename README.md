@@ -6,8 +6,6 @@ Classic Snake. Open `snake.html` and use the arrow keys :arrow_left: :arrow_up: 
 
 <img src='./demo.gif' width=50% height=50% alt='Demo of snake.html'>
 
-<br>
-
 (Hint: you can accelerate.)
 
 **Note:** This was prototyped in Microsoft Edge on a 24" monitor. Your experience may be suboptimal on significantly smaller or larger screens, or (less likely) other browsers.
